@@ -1,7 +1,11 @@
 package com.hafn;
 
+import javax.swing.*;
+
 public class Main {
     static void main() {
-        System.out.println("Hello world!");
+        SwingUtilities.invokeLater(() -> {
+            new ChessGui().setVisible(true);
+        });
     }
 }

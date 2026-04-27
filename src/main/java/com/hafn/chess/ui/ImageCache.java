@@ -1,5 +1,7 @@
 package com.hafn.chess.ui;
 
+import com.hafn.chess.model.piece.Piece;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -34,5 +36,11 @@ public class ImageCache {
 
     public static Image get(String key) {
         return images.get(key);
+    }
+
+    public static Image get(Piece piece) {
+        String key = piece.getColor().name().toLowerCase() + "_" +
+                piece.getType().name().toLowerCase();
+        return get(key);
     }
 }

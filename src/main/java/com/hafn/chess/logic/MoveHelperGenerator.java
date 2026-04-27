@@ -16,7 +16,7 @@ public class MoveHelperGenerator {
             int r = cell.getRow() + dir[0];
             int c = cell.getCol() + dir[1];
 
-            while (inBounds(state, r, c)) {
+            while (state.inBounds(r, c)) {
                 Cell targetCell = state.getCell(r, c);
                 Piece target = state.getPiece(targetCell);
 
@@ -37,8 +37,8 @@ public class MoveHelperGenerator {
         return moves;
     }
 
-    public static boolean inBounds(BoardState state, int r, int c) {
-        return r >= 0 && r < state.rows() &&
-                c >= 0 && c < state.cols();
-    }
+//    public static boolean inBounds(BoardState state, int r, int c) {
+//        return r >= 0 && r < state.getRows() &&
+//                c >= 0 && c < state.getCols();
+//    }
 }

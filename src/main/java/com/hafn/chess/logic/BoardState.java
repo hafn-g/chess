@@ -1,6 +1,5 @@
 package com.hafn.chess.logic;
 
-import com.hafn.chess.model.BoardMetrics;
 import com.hafn.chess.model.Cell;
 import com.hafn.chess.model.HistoryMove;
 import com.hafn.chess.model.piece.Piece;
@@ -15,16 +14,19 @@ public class BoardState {
     private final Map<Cell, Piece> pieceMap;
     private final Cell[][] cells;
     private Set<Cell> possibleMoves;
-    private final BoardMetrics metrics;
     private final List<HistoryMove> historyMoves;
     private Cell clickedCell;
 
-    public BoardState(BoardMetrics metrics) {
+    private final int rows;
+    private final int cols;
+
+    public BoardState(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
         this.pieceMap = new HashMap<>();
         this.historyMoves = new ArrayList<>();
         this.possibleMoves = new HashSet<>();
-        this.metrics = metrics;
-        this.cells = new Cell[metrics.getRows()][metrics.getCols()];
+        this.cells = new Cell[rows][cols];
         this.clickedCell = null;
 
         initCells(this);
@@ -47,12 +49,12 @@ public class BoardState {
         pieceMap.remove(cell);
     }
 
-    public int rows() {
-        return metrics.getRows();
+    public int getRows() {
+        return this.rows;
     }
 
-    public int cols() {
-        return metrics.getCols();
+    public int getCols() {
+        return this.cols;
     }
 
     public Cell getCell(int row, int col) {
@@ -73,11 +75,6 @@ public class BoardState {
 
     public void clearPossibleMoves() {
         this.possibleMoves = new HashSet<>();
-        this.setClickedCell(null);
-    }
-
-    public BoardMetrics getMetrics() {
-        return metrics;
     }
 
     public void addHistoryMoves(HistoryMove historyMove) {
@@ -90,5 +87,12 @@ public class BoardState {
 
     public void setClickedCell(Cell clickedCell) {
         this.clickedCell = clickedCell;
+    }
+
+    /*
+        Single gate on the borders
+     */
+    public boolean inBounds(int r, int c) {
+        return r >= 0 && r < rows && c >= 0 && c < cols;
     }
 }

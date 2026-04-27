@@ -23,12 +23,11 @@ public class Knight extends Piece {
         for (int[] dir : dirs) {
             int r = cell.getRow() + dir[0];
             int c = cell.getCol() + dir[1];
-            if (r >= 0 && r < state.rows() && c >= 0 && c < state.cols()) {
-                Cell target = state.getCell(r, c);
-                Piece targetPiece = state.getPiece(target);
-                if (targetPiece == null || targetPiece.getColor() != getColor()) {
-                    moves.add(target);
-                }
+            if (!state.inBounds(r, c)) continue;
+            Cell target = state.getCell(r, c);
+            Piece targetPiece = state.getPiece(target);
+            if (targetPiece == null || targetPiece.getColor() != getColor()) {
+                moves.add(target);
             }
         }
         return moves;

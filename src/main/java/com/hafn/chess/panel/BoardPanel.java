@@ -19,14 +19,17 @@ public class BoardPanel extends JPanel {
     private final BoardController boardController;
     private final BoardRenderer renderer;
 
+    private final BoardMetrics metrics;
+
     public BoardPanel() {
         setOpaque(false); // transparent background
 
-        BoardMetrics metrics = new BoardMetrics();
+        metrics = new BoardMetrics();
 
-        state = new BoardState(metrics);
-        boardController = new BoardController(this);
+        state = new BoardState(8, 8);
         renderer = new BoardRenderer(this);
+
+        boardController = new BoardController(this);
 
         addListener();
     }
@@ -47,7 +50,7 @@ public class BoardPanel extends JPanel {
 
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
-                boardController.handleClick(e.getX(), e.getY());
+                handleClick(e.getX(), e.getY());
             }
         });
     }
@@ -76,10 +79,28 @@ public class BoardPanel extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        state.getMetrics().calcMetrics(getWidth(), getHeight());
+        metrics.calcMetrics(getWidth(), getHeight());
 
         renderer.drawBoard(g2d);
         renderer.drawCoords(g2d);
+    }
+
+    /*
+        Converts pixels to rows and columns
+     */
+    public void handleClick(int mouseX, int mouseY) {
+        int col = (mouseX - metrics.getBoardX()) / metrics.getCellSize();
+        int row = (mouseY - metrics.getBoardY()) / metrics.getCellSize();
+
+        // outside board
+        if (!state.inBounds(row, col)) {
+            renderer.clearSelection();
+            return;
+        }
+
+        boardController.handleClick(row, col);
+
+        repaint();
     }
 
     public BoardState getState() {
@@ -87,7 +108,11 @@ public class BoardPanel extends JPanel {
     }
 
     public BoardRenderer getRenderer() {
-        return renderer;
+        return this.renderer;
+    }
+
+    public BoardMetrics getMetrics() {
+        return metrics;
     }
 
     public void toRepaint() {

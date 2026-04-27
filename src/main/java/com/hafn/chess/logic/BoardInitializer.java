@@ -6,8 +6,8 @@ import com.hafn.chess.model.piece.*;
 public class BoardInitializer {
 
     public static void initCells(BoardState state) {
-        for (int r = 0; r < state.rows(); r++) {
-            for (int c = 0; c < state.cols(); c++) {
+        for (int r = 0; r < state.getRows(); r++) {
+            for (int c = 0; c < state.getCols(); c++) {
                 state.addCell(r, c);
             }
         }
@@ -15,7 +15,7 @@ public class BoardInitializer {
 
     public static void initPieces(BoardState state) {
         // pawns
-        for (int c = 0; c < state.cols(); c++) {
+        for (int c = 0; c < state.getCols(); c++) {
             state.addPiece(new Pawn(PieceColor.BLACK, state.getCell(1, c)));
             state.addPiece(new Pawn(PieceColor.WHITE, state.getCell(6, c)));
         }

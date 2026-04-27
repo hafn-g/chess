@@ -3,22 +3,17 @@ package com.hafn.chess.model;
 import java.util.Objects;
 
 public class BoardMetrics {
-    private int padding = 30;
+    private final int padding = 30;
     private int side;
     private int cellSize;
     private int boardX;
     private int boardY;
-    private int rows;
-    private int cols;
+    private final int rows;
+    private final int cols;
 
     public BoardMetrics() {
         this.rows = 8;
         this.cols = 8;
-    }
-
-    public BoardMetrics(int rows, int cols) {
-        this.rows = rows;
-        this.cols = cols;
     }
 
     public void calcMetrics(int width, int height) {
@@ -76,8 +71,8 @@ public class BoardMetrics {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         BoardMetrics that = (BoardMetrics) o;
-        return padding == that.padding && side == that.side && cellSize == that.cellSize && boardX == that.boardX &&
-                boardY == that.boardY && rows == that.rows && cols == that.cols;
+        return side == that.side && cellSize == that.cellSize && boardX == that.boardX && boardY == that.boardY &&
+                rows == that.rows && cols == that.cols;
     }
 
     @Override

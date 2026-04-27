@@ -8,8 +8,6 @@ import com.hafn.chess.model.PieceType;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.hafn.chess.logic.MoveHelperGenerator.inBounds;
-
 public class Pawn extends Piece {
     public Pawn(PieceColor color, Cell cell) {
         super(PieceType.PAWN, color, cell);
@@ -25,7 +23,7 @@ public class Pawn extends Piece {
         int forwardRow = cell.getRow() + dir;
 
         // forward move
-        if (inBounds(state, forwardRow, cell.getCol())) {
+        if (state.inBounds(forwardRow, cell.getCol())) {
             Cell targetCell = state.getCell(forwardRow, cell.getCol());
             if (state.getPiece(targetCell) == null) {
                 moves.add(targetCell);
@@ -37,7 +35,7 @@ public class Pawn extends Piece {
         for (int d : dc) {
             int c = cell.getCol() + d;
 
-            if (!inBounds(state, forwardRow, c)) continue;
+            if (!state.inBounds(forwardRow, c)) continue;
 
             Cell targetCell = state.getCell(forwardRow, c);
             Piece target = state.getPiece(targetCell);

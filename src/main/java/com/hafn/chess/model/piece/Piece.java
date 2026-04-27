@@ -5,15 +5,12 @@ import com.hafn.chess.model.Cell;
 import com.hafn.chess.model.HistoryMove;
 import com.hafn.chess.model.PieceColor;
 import com.hafn.chess.model.PieceType;
-import com.hafn.chess.ui.ImageCache;
 
-import java.awt.*;
 import java.util.Objects;
 
 public abstract class Piece implements Move {
     private final PieceType type;
     private final PieceColor color;
-    private final Image image;
 
     private Cell cell;
 
@@ -21,17 +18,6 @@ public abstract class Piece implements Move {
         this.type = type;
         this.color = color;
         this.cell = cell;
-        this.image = loadImage();
-    }
-
-    private Image loadImage() {
-        String key = this.getColor().name().toLowerCase() + "_" +
-                this.getType().name().toLowerCase();
-        return ImageCache.get(key);
-    }
-
-    public Image getImage() {
-        return image;
     }
 
     public Cell getCell() {

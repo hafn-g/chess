@@ -11,16 +11,10 @@ public class BoardController {
         this.boardPanel = boardPanel;
     }
 
-    public void handleClick(int mouseX, int mouseY) {
-        int col = (mouseX - boardPanel.getState().getMetrics().getBoardX()) / boardPanel.getState().getMetrics().getCellSize();
-        int row = (mouseY - boardPanel.getState().getMetrics().getBoardY()) / boardPanel.getState().getMetrics().getCellSize();
-
-        // outside board
-        if (row < 0 || row >= boardPanel.getState().getMetrics().getRows() || col < 0 || col >= boardPanel.getState().getMetrics().getCols()) {
-            boardPanel.getRenderer().clearSelection();
-            return;
-        }
-
+    /*
+        Works only with cells
+     */
+    public void handleClick(int row, int col) {
         Cell clicked = boardPanel.getState().getCell(row, col);
 
         boolean isMove = boardPanel.getState().getPossibleMoves().contains(clicked);
@@ -30,8 +24,6 @@ public class BoardController {
         } else {
             toSelected(clicked);
         }
-
-        boardPanel.toRepaint();
     }
 
     private void toSelected(Cell clicked) {

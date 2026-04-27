@@ -1,4 +1,4 @@
-package com.hafn.panel;
+package com.hafn.chess.panel;
 
 import javax.swing.*;
 import java.awt.*;

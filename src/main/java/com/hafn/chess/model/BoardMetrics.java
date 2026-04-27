@@ -1,4 +1,6 @@
-package com.hafn.data;
+package com.hafn.chess.model;
+
+import java.util.Objects;
 
 public class BoardMetrics {
     private int padding = 30;
@@ -8,6 +10,11 @@ public class BoardMetrics {
     private int boardY;
     private int rows;
     private int cols;
+
+    public BoardMetrics() {
+        this.rows = 8;
+        this.cols = 8;
+    }
 
     public BoardMetrics(int rows, int cols) {
         this.rows = rows;
@@ -49,24 +56,12 @@ public class BoardMetrics {
         return cols;
     }
 
-    public void setCols(int cols) {
-        this.cols = cols;
-    }
-
     public int getPadding() {
         return padding;
     }
 
-    public void setPadding(int padding) {
-        this.padding = padding;
-    }
-
     public int getRows() {
         return rows;
-    }
-
-    public void setRows(int rows) {
-        this.rows = rows;
     }
 
     public int getSide() {
@@ -75,5 +70,31 @@ public class BoardMetrics {
 
     public void setSide(int side) {
         this.side = side;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        BoardMetrics that = (BoardMetrics) o;
+        return padding == that.padding && side == that.side && cellSize == that.cellSize && boardX == that.boardX &&
+                boardY == that.boardY && rows == that.rows && cols == that.cols;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(padding, side, cellSize, boardX, boardY, rows, cols);
+    }
+
+    @Override
+    public String toString() {
+        return "BoardMetrics{" +
+                "boardX=" + boardX +
+                ", padding=" + padding +
+                ", side=" + side +
+                ", cellSize=" + cellSize +
+                ", boardY=" + boardY +
+                ", rows=" + rows +
+                ", cols=" + cols +
+                '}';
     }
 }

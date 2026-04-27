@@ -1,4 +1,4 @@
-package com.hafn.ui;
+package com.hafn.chess.ui;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,7 +1,7 @@
-package com.hafn;
+package com.hafn.chess;
 
-import com.hafn.panel.BoardPanel;
-import com.hafn.panel.StatsPanel;
+import com.hafn.chess.panel.BoardPanel;
+import com.hafn.chess.panel.StatsPanel;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,4 +1,4 @@
-package com.hafn;
+package com.hafn.chess;
 
 import javax.swing.*;
 

@@ -115,10 +115,6 @@ public class BoardPanel extends JPanel implements BoardStatePort, BoardRenderPor
         return this.state;
     }
 
-    public BoardRenderer getRenderer() {
-        return this.renderer;
-    }
-
     public BoardMetrics getMetrics() {
         return metrics;
     }

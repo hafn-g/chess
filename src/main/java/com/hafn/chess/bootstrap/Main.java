@@ -6,8 +6,6 @@ import javax.swing.*;
 
 public class Main {
     static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new ChessFrame().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new ChessFrame().setVisible(true));
     }
 }

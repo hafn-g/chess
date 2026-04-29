@@ -123,10 +123,9 @@ public class BoardRenderer implements SelectionPort {
         int side = Math.min(width, height) - padding;
         int cellSize = side / boardRenderPort.getMetrics().getRows();
 
-        int boardX = padding;
         int boardY = 0;
 
-        int col = (mouseX - boardX) / cellSize;
+        int col = (mouseX - padding) / cellSize;
         int row = (mouseY - boardY) / cellSize;
 
         if (row >= 0 && row < boardRenderPort.getMetrics().getRows() && col >= 0 && col < boardRenderPort.getMetrics().getCols()) {

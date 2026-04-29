@@ -158,10 +158,6 @@ public class BoardState implements BoardPort {
         return queue;
     }
 
-    public void setQueue(PieceColor queue) {
-        this.queue = queue;
-    }
-
     public void nextQueue() {
         this.queue = queue.next();
     }

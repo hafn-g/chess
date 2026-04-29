@@ -48,8 +48,6 @@ public interface BoardPort {
 
     PieceColor getQueue();
 
-    void setQueue(PieceColor queue);
-
     void nextQueue();
 
     LocalDateTime getStartGameDateTime();

@@ -15,7 +15,7 @@ public class StatsPanel extends JPanel {
     private final JLabel blackTimeLabel;
     private final JLabel gameTimeLabel;
 
-    private Timer timer;
+    private final Timer timer;
 
     public StatsPanel(BoardPanel boardPanel) {
         this.boardPanel = boardPanel;
@@ -44,7 +44,7 @@ public class StatsPanel extends JPanel {
         gameTimeLabel.setAlignmentX(CENTER_ALIGNMENT);
         add(gameTimeLabel);
 
-        timer = new Timer(500, e -> updateStats());
+        timer = new Timer(500, _ -> updateStats());
         timer.start();
         updateStats();
     }

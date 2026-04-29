@@ -77,12 +77,4 @@ public class Pawn extends Piece {
             movedInLast = false;
         }
     }
-
-    public boolean isMoved() {
-        return isMoved;
-    }
-
-    public void setMoved(boolean moved) {
-        isMoved = moved;
-    }
 }

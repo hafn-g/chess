@@ -1,6 +1,8 @@
 package com.hafn.chess.ui.swing.renderer;
 
-import com.hafn.chess.domain.model.piece.Piece;
+import com.hafn.chess.domain.model.PieceColor;
+import com.hafn.chess.domain.model.PieceType;
+import com.hafn.chess.domain.piece.Piece;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,8 +41,12 @@ public class ImageCache {
     }
 
     public static Image get(Piece piece) {
-        String key = piece.getColor().name().toLowerCase() + "_" +
-                piece.getType().name().toLowerCase();
+        String key = piece.getColor().name().toLowerCase() + "_" + piece.getType().name().toLowerCase();
+        return get(key);
+    }
+
+    public static Image get(PieceType type, PieceColor color) {
+        String key = color.name().toLowerCase() + "_" + type.name().toLowerCase();
         return get(key);
     }
 }

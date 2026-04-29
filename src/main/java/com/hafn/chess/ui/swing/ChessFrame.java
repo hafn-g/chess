@@ -18,22 +18,22 @@ public class ChessFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
         setContentPane(mainPanel);
 
-        // Stats
-        JPanel statsPanel = new StatsPanel();
-        mainPanel.add(statsPanel, BorderLayout.NORTH);
-
         // Chess board panel
-        initBoard();
+        BoardPanel boardPanel = initBoard();
+
+        // Stats
+        JPanel statsPanel = new StatsPanel(boardPanel);
+        mainPanel.add(statsPanel, BorderLayout.NORTH);
 
         pack();
         setMinimumSize(new Dimension(400, 500));
         setLocationRelativeTo(null);
     }
 
-    private void initBoard() {
+    private BoardPanel initBoard() {
         JPanel centerWrapper = new JPanel(new GridBagLayout());
         BoardPanel boardPanel = new BoardPanel();
         GridBagConstraints gbc = new GridBagConstraints();
@@ -42,5 +42,7 @@ public class ChessFrame extends JFrame {
         gbc.weighty = 1.0;
         centerWrapper.add(boardPanel, gbc);
         mainPanel.add(centerWrapper, BorderLayout.CENTER);
+
+        return boardPanel;
     }
 }

@@ -1,8 +1,11 @@
 package com.hafn.chess.ui.swing.renderer;
 
-import com.hafn.chess.application.port.SelectionPort;
+import com.hafn.chess.application.port.out.BoardRenderPort;
+import com.hafn.chess.application.port.out.SelectionPort;
 import com.hafn.chess.domain.model.Cell;
-import com.hafn.chess.domain.model.piece.Piece;
+import com.hafn.chess.domain.model.PieceColor;
+import com.hafn.chess.domain.model.PieceType;
+import com.hafn.chess.domain.piece.Piece;
 
 import java.awt.*;
 
@@ -43,13 +46,31 @@ public class BoardRenderer implements SelectionPort {
     }
 
     private Color getDrawBoardColor(Cell cell) {
+        Piece piece = boardRenderPort.getState().getPiece(cell);
+        if (piece != null) {
+            if (boardRenderPort.getState().isBlackShah()) {
+                if (piece.getType().equals(PieceType.KING) && piece.getColor().equals(PieceColor.BLACK)) {
+                    return new Color(108, 0, 0, 100);
+                }
+            }
+            if (boardRenderPort.getState().isWhiteShah()) {
+                if (piece.getType().equals(PieceType.KING) && piece.getColor().equals(PieceColor.WHITE)) {
+                    return new Color(108, 0, 0, 100);
+                }
+            }
+        }
         boolean hovered = cellHovered == cell;
         boolean selected = cellSelected == cell;
-        boolean isMove = boardRenderPort.getState().getPossibleMoves().contains(cell);
+
+        Piece pieceClicked = boardRenderPort.getState().getPiece(boardRenderPort.getState().getClickedCell());
+        boolean isMove = false;
+        if (pieceClicked != null) {
+            isMove = pieceClicked.getPossibleMoves().contains(cell);
+        }
 
         Color color = cell.isLight() ? lightColor : darkColor;
         if (isMove) {
-            if (boardRenderPort.getState().getPiece(cell) != null) {
+            if (piece != null) {
                 color = new Color(255, 0, 0, 100);
             } else {
                 color = new Color(0, 255, 0, 100);

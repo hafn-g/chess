@@ -1,4 +1,4 @@
-package com.hafn.chess.application.port;
+package com.hafn.chess.application.port.out;
 
 import com.hafn.chess.domain.model.Cell;
 
@@ -9,4 +9,3 @@ public interface SelectionPort {
 
     void clearSelectedCell();
 }
-

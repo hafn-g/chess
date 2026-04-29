@@ -1,14 +1,26 @@
-package com.hafn.chess.application;
+package com.hafn.chess.bootstrap;
 
 import com.hafn.chess.domain.model.PieceColor;
-import com.hafn.chess.domain.model.piece.*;
+import com.hafn.chess.domain.piece.*;
+import com.hafn.chess.domain.state.BoardState;
+
+import static com.hafn.chess.domain.service.CheckRule.checkAllPiece;
 
 public class BoardInitializer {
+
+    public static BoardState createDefaultState(PieceColor queue) {
+        BoardState state = new BoardState(8, 8, queue);
+        initCells(state);
+        initPieces(state);
+        checkAllPiece(state);
+        return state;
+    }
 
     public static void initCells(BoardState state) {
         for (int r = 0; r < state.getRows(); r++) {
             for (int c = 0; c < state.getCols(); c++) {
-                state.addCell(r, c);
+                String cellName = "" + (char) ('a' + c) + (state.getRows() - r);
+                state.addCell(r, c, cellName.toUpperCase());
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.hafn.chess.domain.model.piece;
+package com.hafn.chess.domain.piece;
 
 import com.hafn.chess.domain.model.Cell;
 import com.hafn.chess.domain.model.PieceColor;
@@ -14,9 +14,8 @@ public class King extends Piece {
     }
 
     @Override
-    public Set<Cell> possibleMoves(BoardPort state, Cell cell) {
+    public void getNewPossibleMoves(BoardPort state) {
         Set<Cell> moves = new HashSet<>();
-        Piece currentPiece = state.getPiece(cell);
 
         int[] d = {-1, 0, 1};
 
@@ -24,20 +23,21 @@ public class King extends Piece {
             for (int dc : d) {
                 if (dr == 0 && dc == 0) continue;
 
-                int r = cell.getRow() + dr;
-                int c = cell.getCol() + dc;
+                int r = this.getCell().getRow() + dr;
+                int c = this.getCell().getCol() + dc;
 
                 if (!state.inBounds(r, c)) continue;
                 Cell targetCell = state.getCell(r, c);
 
                 Piece targetPiece = state.getPiece(targetCell);
                 if (targetPiece == null ||
-                        targetPiece.getColor() != currentPiece.getColor()) {
+                        targetPiece.getColor() != this.getColor()) {
                     moves.add(targetCell);
                 }
             }
         }
 
-        return moves;
+        setPossibleMoves(moves);
     }
 }
+

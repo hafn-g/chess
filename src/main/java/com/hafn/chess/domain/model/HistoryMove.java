@@ -1,6 +1,6 @@
 package com.hafn.chess.domain.model;
 
-import com.hafn.chess.domain.model.piece.Piece;
+import com.hafn.chess.domain.piece.Piece;
 
 import java.util.Objects;
 

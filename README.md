@@ -1,5 +1,10 @@
 # Chess Blitz Game
 
+[![Latest Release](https://img.shields.io/github/v/release/hafn-g/chess)](https://github.com/hafn-g/chess/releases)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/hafn-g/chess/rebase.yml?branch=main)](https://github.com/hafn-g/chess/actions)
+[![License: MIT](https://img.shields.io/github/license/hafn-g/chess)](https://opensource.org/licenses/MIT)
+![Java Version](https://img.shields.io/badge/Java-25-blue)
+
 <div align="center">
   <img src="./media/image/01-overview.png" width="400" alt="Gameplay view">
 </div>
@@ -16,6 +21,30 @@ A **chess game** played as **blitz rounds**, written entirely in **Java Swing** 
 - When **check** is declared, only moves that resolve it are allowed
 - Any move that would put your own king in **check** is canceled
 - **Statistics panel** shows: whose turn, each player's remaining time, and total game time
+
+## License
+Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more information.
+
+## Getting Started
+
+### Prerequisites
+* **Java 25** or higher (due to the use of latest JVM features).
+
+### Running the App
+1. Download the latest `.jar` from the [Releases page](../../releases).
+2. Run it via terminal:
+   ```bash
+   java -jar hafn-chess-1.0.0.jar
+   ```
+   *Or simply double-click the file if your OS associations are set up.*
+
+### Building from source
+If you want to build the project yourself:
+```bash
+git clone https://github.com/hafn-g/chess.git
+cd chess
+mvn clean package
+```
 
 ## Invalid Move Notification
 
@@ -70,16 +99,16 @@ chess/
 │ └── state/ # Game state
 │ └── BoardState.java # Current board state
 └── ui/ # User interface
-    └── swing/ # Swing UI implementation
-        ├── ChessFrame.java # Main application window
-        ├── model/
-        │ └── BoardMetrics.java # Board display parameters
-        ├── panel/
-        │ ├── BoardPanel.java # Chessboard panel
-        │ └── StatsPanel.java # Statistics panel
-        └── renderer/
-            ├── BoardRenderer.java # Board rendering logic
-            └── ImageCache.java # Image caching
+└── swing/ # Swing UI implementation
+├── ChessFrame.java # Main application window
+├── model/
+│ └── BoardMetrics.java # Board display parameters
+├── panel/
+│ ├── BoardPanel.java # Chessboard panel
+│ └── StatsPanel.java # Statistics panel
+└── renderer/
+├── BoardRenderer.java # Board rendering logic
+└── ImageCache.java # Image caching
 ```
 
 </details>

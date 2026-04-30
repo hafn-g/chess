@@ -1,0 +1,50 @@
+@startuml
+skinparam maxMessageSize 150
+
+actor User
+participant Main
+participant "ChessFrame" as ChessFrame
+participant "BoardPanel" as BoardPanel
+participant "BoardController" as Controller
+participant "BoardInitializer" as Initializer
+participant "Domain Logic\n(BoardState,\nPiece, CheckRule)" as Domain
+
+== Application Startup ==
+User -> Main: Run\napplication
+Main -> ChessFrame: Create window
+ChessFrame -> BoardPanel: Create board\npanel
+BoardPanel -> Initializer: Request initial\nstate
+Initializer -> Domain: Create state\nand place pieces
+Initializer --> BoardPanel: BoardState
+BoardPanel -> Controller: Create\ncontroller
+ChessFrame -> User: Show window\nwith board
+
+== User Move ==
+User -> BoardPanel: Click on cell\n(attempt move)
+BoardPanel -> Controller: Click coordinates\n(handleClick)
+Controller -> Domain: Check\npossible moves
+alt Valid move cell
+    Controller -> Domain: Execute move\n(Piece.execute)
+    Controller -> Domain: Check for checks\n(checkAllPiece)
+    alt Check to own king
+        Controller -> Domain: Undo move\n(Piece.undo)
+        Controller -> BoardPanel: showInfoDialog\n("Invalid move")
+        BoardPanel -> User: Show invalid\nmove message
+    else Move is valid
+        opt Pawn promotion\n(board edge)
+            Controller -> BoardPanel: showPromotionDialog
+            BoardPanel -> User: Piece selection\ndialog
+            User --> BoardPanel: Piece selected
+            BoardPanel -> Domain: Replace piece
+        end
+        Controller -> Domain: Pass turn\n(nextQueue)
+    end
+else Select piece
+    Controller -> Domain: Set\nselected cell
+end
+
+Controller --> BoardPanel: Return\ncontrol
+BoardPanel -> BoardPanel: Redraw\n(repaint)
+BoardPanel -> User: Updated\nboard
+
+@enduml

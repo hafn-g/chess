@@ -1,0 +1,27 @@
+name: Generate PlantUML Diagrams
+on:
+  push:
+    paths:
+      - 'media/diagram/*.puml'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run PlantUML Docker
+        run: |
+          mkdir -p media/diagram/image
+          docker run --rm -v $(pwd)/media/diagram:/data plantuml/plantuml:1.2023.10 *.puml -tpng -o image
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add media/diagram/image/*.png
+          git commit -m "chore: update diagrams in image folder" || exit 0
+          git push

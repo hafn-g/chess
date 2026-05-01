@@ -1,4 +1,3 @@
-
 package com.hafn.chess.ui.swing.panel;
 
 import lombok.extern.slf4j.Slf4j;
@@ -6,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 @Slf4j
 public class StatsPanel extends JPanel {
@@ -16,39 +13,59 @@ public class StatsPanel extends JPanel {
     private final JLabel whiteTimeLabel;
     private final JLabel blackTimeLabel;
     private final JLabel gameTimeLabel;
+    private final JButton pauseButton;
 
     private final Timer timer;
 
     public StatsPanel(BoardPanel boardPanel) {
         this.boardPanel = boardPanel;
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBorder(new EmptyBorder(16, 0, 16, 0));
+        setLayout(new BorderLayout());
+        setBorder(new EmptyBorder(16, 16, 16, 16));
+
+        JPanel textPanel = new JPanel();
+        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
 
         Font statsFont = new Font(Font.SANS_SERIF, Font.BOLD, 16);
 
         turnLabel = new JLabel("Turn: " + getTurnText());
         turnLabel.setFont(statsFont);
         turnLabel.setAlignmentX(CENTER_ALIGNMENT);
-        add(turnLabel);
+        textPanel.add(turnLabel);
 
         whiteTimeLabel = new JLabel("White time: " + formatTime(boardPanel.getState().getWhiteTime()));
         whiteTimeLabel.setFont(statsFont);
         whiteTimeLabel.setAlignmentX(CENTER_ALIGNMENT);
-        add(whiteTimeLabel);
+        textPanel.add(whiteTimeLabel);
 
         blackTimeLabel = new JLabel("Black time: " + formatTime(boardPanel.getState().getBlackTime()));
         blackTimeLabel.setFont(statsFont);
         blackTimeLabel.setAlignmentX(CENTER_ALIGNMENT);
-        add(blackTimeLabel);
+        textPanel.add(blackTimeLabel);
 
         gameTimeLabel = new JLabel("Game time: 00:00");
         gameTimeLabel.setFont(statsFont);
         gameTimeLabel.setAlignmentX(CENTER_ALIGNMENT);
-        add(gameTimeLabel);
+        textPanel.add(gameTimeLabel);
+
+        add(textPanel, BorderLayout.CENTER);
+
+        pauseButton = new JButton("‖");
+        pauseButton.setFont(statsFont);
+        pauseButton.addActionListener(_ -> togglePause());
+
+        JPanel buttonPanel = new JPanel(new BorderLayout());
+        buttonPanel.add(pauseButton, BorderLayout.NORTH);
+        add(buttonPanel, BorderLayout.EAST);
 
         timer = new Timer(500, _ -> updateStats());
         timer.start();
         updateStats();
+    }
+
+    private void togglePause() {
+        boolean isPaused = boardPanel.getState().isPauseGame();
+        boardPanel.getState().setPauseGame(!isPaused);
+        pauseButton.setText(isPaused ? "‖" : "▶");
     }
 
     private String getTurnText() {
@@ -61,11 +78,7 @@ public class StatsPanel extends JPanel {
         whiteTimeLabel.setText("White time: " + formatTime(boardPanel.getState().getWhiteTime()));
         blackTimeLabel.setText("Black time: " + formatTime(boardPanel.getState().getBlackTime()));
 
-        LocalDateTime start = boardPanel.getState().getStartGameDateTime();
-        int elapsed = 0;
-        if (start != null) {
-            elapsed = (int) Duration.between(start, LocalDateTime.now()).getSeconds();
-        }
+        int elapsed = boardPanel.getState().getGameTime();
         gameTimeLabel.setText("Game time: " + formatTime(elapsed));
 
         log.trace(

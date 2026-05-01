@@ -20,9 +20,9 @@ public class BoardMetrics {
     private int boardX;
     private int boardY;
 
-    public BoardMetrics() {
-        this.rows = 8;
-        this.cols = 8;
+    public BoardMetrics(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
     }
 
     public void calcMetrics(int width, int height) {

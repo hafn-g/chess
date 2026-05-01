@@ -1,5 +1,6 @@
 package com.hafn.chess.ui.swing;
 
+import com.hafn.chess.domain.model.PieceColor;
 import com.hafn.chess.ui.swing.panel.BoardPanel;
 import com.hafn.chess.ui.swing.panel.StatsPanel;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,15 @@ public class ChessFrame extends JFrame {
         initUI();
     }
 
+    public ChessFrame(int rows, int cols, int playerTime, PieceColor queue) {
+        initUI(rows, cols, playerTime, queue);
+    }
+
     private void initUI() {
+        initUI(8, 8, 600, PieceColor.WHITE);
+    }
+
+    private void initUI(int rows, int cols, int playerTime, PieceColor queue) {
         setTitle("Chess Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -24,7 +33,7 @@ public class ChessFrame extends JFrame {
         setContentPane(mainPanel);
 
         // Chess board panel
-        BoardPanel boardPanel = initBoard();
+        BoardPanel boardPanel = initBoard(rows, cols, playerTime, queue);
         log.debug("Board initialized: {}", boardPanel);
 
         // Stats
@@ -39,9 +48,9 @@ public class ChessFrame extends JFrame {
         log.info("Game window initialized and shown to user");
     }
 
-    private BoardPanel initBoard() {
+    private BoardPanel initBoard(int rows, int cols, int playerTime, PieceColor queue) {
         JPanel centerWrapper = new JPanel(new GridBagLayout());
-        BoardPanel boardPanel = new BoardPanel();
+        BoardPanel boardPanel = new BoardPanel(rows, cols, playerTime, queue);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;

@@ -29,6 +29,7 @@ public class BoardState implements BoardPort {
     private final LocalDateTime startGame;
     private final AtomicInteger whiteTime;
     private final AtomicInteger blackTime;
+    private final AtomicInteger gameTime;
 
     @Setter
     @Getter
@@ -48,12 +49,13 @@ public class BoardState implements BoardPort {
     private final int rows;
     @Getter
     private final int cols;
+    @Setter
     @Getter
     private boolean pauseGame = false;
 
     private ScheduledExecutorService scheduler;
 
-    public BoardState(int rows, int cols, PieceColor queue) {
+    public BoardState(int rows, int cols, int playerTime, PieceColor queue) {
         this.rows = rows;
         this.cols = cols;
         this.pieceMap = new HashMap<>();
@@ -62,8 +64,9 @@ public class BoardState implements BoardPort {
         this.clickedCell = null;
         this.queue = queue;
         this.startGame = LocalDateTime.now();
-        this.whiteTime = new AtomicInteger(600);
-        this.blackTime = new AtomicInteger(600);
+        this.whiteTime = new AtomicInteger(playerTime);
+        this.blackTime = new AtomicInteger(playerTime);
+        this.gameTime = new AtomicInteger(0);
 
         startTimer();
     }
@@ -78,6 +81,12 @@ public class BoardState implements BoardPort {
                 whiteTime
         );
         Runnable task = () -> {
+            if (pauseGame) {
+                return;
+            }
+
+            gameTime.incrementAndGet();
+
             if (queue.equals(PieceColor.BLACK)) {
                 blackTime.decrementAndGet();
             } else {
@@ -86,8 +95,9 @@ public class BoardState implements BoardPort {
 
             if (whiteTime.get() <= 0 || blackTime.get() <= 0) {
                 log.info(
-                        "Timer stopped due to one of the players running out of time (Start time {}, Black time {}s, White time {}s)",
+                        "Timer stopped due to one of the players running out of time (Start time {}, End time {}, Black time {}s, White time {}s)",
                         startGame,
+                        LocalDateTime.now(),
                         blackTime,
                         whiteTime
                 );
@@ -159,6 +169,10 @@ public class BoardState implements BoardPort {
 
     public int getWhiteTime() {
         return whiteTime.get();
+    }
+
+    public int getGameTime() {
+        return gameTime.get();
     }
 
     public void addTime(PieceColor color) {

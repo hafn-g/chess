@@ -34,12 +34,21 @@ public class BoardPanel extends JPanel implements BoardStatePort, BoardRenderPor
     private final BoardInputPort boardController;
     private final BoardRenderer renderer;
 
-    public BoardPanel() {
+    public BoardPanel(int rows, int cols, int playerTime, PieceColor queue) {
         setOpaque(false); // transparent background
 
-        metrics = new BoardMetrics();
+        if (rows < 8 || cols < 8) {
+            throw new IllegalArgumentException("The minimum is 8 columns and rows");
+        }
 
-        state = BoardInitializer.createDefaultState(PieceColor.BLACK);
+        log.info(
+                "Configuration set: {} rows, {} columns, {}s time per player, {} moves first",
+                rows, cols, playerTime, queue
+        );
+
+        metrics = new BoardMetrics(rows, cols);
+
+        state = BoardInitializer.createDefaultState(rows, cols, playerTime, queue);
         log.debug("Board state was initialized by the default method: {}", state);
         renderer = new BoardRenderer(this);
         log.debug("Board render was initialized: {}", renderer);

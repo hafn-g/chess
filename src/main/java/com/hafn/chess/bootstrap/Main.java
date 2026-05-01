@@ -1,11 +1,11 @@
 package com.hafn.chess.bootstrap;
 
-import com.hafn.chess.ui.swing.ChessFrame;
+import com.hafn.chess.ui.swing.StartFrame;
 
 import javax.swing.*;
 
 public class Main {
-    static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ChessFrame().setVisible(true));
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new StartFrame().setVisible(true));
     }
 }

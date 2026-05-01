@@ -7,7 +7,7 @@ import com.hafn.chess.domain.port.BoardPort;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MoveHelperGenerator {
+public abstract class MoveHelperGenerator {
 
     public static Set<Cell> slidingMoves(BoardPort state, Piece piece, int[][] directions) {
         Set<Cell> moves = new HashSet<>();

@@ -5,16 +5,22 @@ import com.hafn.chess.domain.model.HistoryMove;
 import com.hafn.chess.domain.model.PieceColor;
 import com.hafn.chess.domain.model.PieceType;
 import com.hafn.chess.domain.port.BoardPort;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+@Getter
+@EqualsAndHashCode
 public abstract class Piece implements Move {
     private final PieceType type;
     private final PieceColor color;
-    private Set<Cell> possibleMoves;
 
+    @Setter
+    private Set<Cell> possibleMoves;
+    @Setter
     private Cell cell;
 
     public Piece(PieceType type, PieceColor color, Cell cell) {
@@ -22,30 +28,6 @@ public abstract class Piece implements Move {
         this.color = color;
         this.cell = cell;
         this.possibleMoves = new HashSet<>();
-    }
-
-    public Cell getCell() {
-        return cell;
-    }
-
-    public PieceColor getColor() {
-        return color;
-    }
-
-    public PieceType getType() {
-        return type;
-    }
-
-    public void setCell(Cell cell) {
-        this.cell = cell;
-    }
-
-    public Set<Cell> getPossibleMoves() {
-        return possibleMoves;
-    }
-
-    public void setPossibleMoves(Set<Cell> possibleMoves) {
-        this.possibleMoves = possibleMoves;
     }
 
     @Override
@@ -92,24 +74,11 @@ public abstract class Piece implements Move {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Piece piece = (Piece) o;
-        return type == piece.type && color == piece.color && Objects.equals(possibleMoves, piece.possibleMoves) && Objects.equals(cell, piece.cell);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, color, possibleMoves, cell);
-    }
-
-    @Override
     public String toString() {
         return "Piece{" +
                 "cell=" + cell +
-                ", type=" + type +
                 ", color=" + color +
-                ", possibleMoves=" + possibleMoves +
+                ", type=" + type +
                 '}';
     }
 }

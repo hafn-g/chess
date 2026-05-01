@@ -2,10 +2,12 @@ package com.hafn.chess.ui.swing;
 
 import com.hafn.chess.ui.swing.panel.BoardPanel;
 import com.hafn.chess.ui.swing.panel.StatsPanel;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
 
+@Slf4j
 public class ChessFrame extends JFrame {
     private JPanel mainPanel;
 
@@ -23,14 +25,18 @@ public class ChessFrame extends JFrame {
 
         // Chess board panel
         BoardPanel boardPanel = initBoard();
+        log.debug("Board initialized: {}", boardPanel);
 
         // Stats
         JPanel statsPanel = new StatsPanel(boardPanel);
         mainPanel.add(statsPanel, BorderLayout.NORTH);
+        log.debug("Statistics initialized: {}", statsPanel);
 
         pack();
         setMinimumSize(new Dimension(400, 500));
         setLocationRelativeTo(null);
+
+        log.info("Game window initialized and shown to user");
     }
 
     private BoardPanel initBoard() {

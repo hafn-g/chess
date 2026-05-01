@@ -6,9 +6,13 @@ import com.hafn.chess.domain.model.Cell;
 import com.hafn.chess.domain.model.PieceColor;
 import com.hafn.chess.domain.model.PieceType;
 import com.hafn.chess.domain.piece.Piece;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.awt.*;
 
+@ToString
+@EqualsAndHashCode
 public class BoardRenderer implements SelectionPort {
     private final Color lightColor = new Color(240, 217, 181);
     private final Color darkColor = new Color(181, 136, 99);
@@ -149,14 +153,17 @@ public class BoardRenderer implements SelectionPort {
         }
     }
 
+    @Override
     public void clearSelectedCell() {
         cellSelected = null;
     }
 
+    @Override
     public Cell getSelectedCell() {
         return cellSelected;
     }
 
+    @Override
     public void setSelectedCell(Cell cellSelected) {
         this.cellSelected = cellSelected;
     }

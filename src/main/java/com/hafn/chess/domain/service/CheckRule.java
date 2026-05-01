@@ -8,7 +8,7 @@ import com.hafn.chess.domain.state.BoardState;
 
 import java.util.Map;
 
-public class CheckRule {
+public abstract class CheckRule {
 
     public static void checkAllPiece(BoardState state) {
         checkAllPiece(state, state.getPieces());

@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 public interface BoardStatePort {
     BoardState getState();
 
-    void showPromotionDialog(PieceColor color, Consumer<PieceType> onPromotionSelected);
+    boolean showPromotionDialog(PieceColor color, Consumer<PieceType> onPromotionSelected);
 
     void showInfoDialog(String title, String message);
 }

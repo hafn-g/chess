@@ -6,7 +6,7 @@ import com.hafn.chess.domain.state.BoardState;
 
 import static com.hafn.chess.domain.service.CheckRule.checkAllPiece;
 
-public class BoardInitializer {
+public abstract class BoardInitializer {
 
     public static BoardState createDefaultState(PieceColor queue) {
         BoardState state = new BoardState(8, 8, queue);

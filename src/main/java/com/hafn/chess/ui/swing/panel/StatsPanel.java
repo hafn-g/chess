@@ -1,13 +1,15 @@
 
 package com.hafn.chess.ui.swing.panel;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-
+@Slf4j
 public class StatsPanel extends JPanel {
     private final BoardPanel boardPanel;
     private final JLabel turnLabel;
@@ -65,6 +67,14 @@ public class StatsPanel extends JPanel {
             elapsed = (int) Duration.between(start, LocalDateTime.now()).getSeconds();
         }
         gameTimeLabel.setText("Game time: " + formatTime(elapsed));
+
+        log.trace(
+                "Current turn: {}, Black time: {}, White time: {}, Game time: {}",
+                boardPanel.getState().getQueue(),
+                boardPanel.getState().getWhiteTime(),
+                boardPanel.getState().getBlackTime(),
+                formatTime(elapsed)
+        );
 
         if (boardPanel.getState().getWhiteTime() <= 0 || boardPanel.getState().getBlackTime() <= 0) {
             boardPanel.showInfoDialog("Game Finished", "Time is up!");

@@ -1,9 +1,13 @@
 package com.hafn.chess.domain.model;
 
 import com.hafn.chess.domain.piece.Piece;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-import java.util.Objects;
-
+@Getter
+@EqualsAndHashCode
+@ToString
 public class HistoryMove {
     private final Piece piece;
     private final Cell oldCell;
@@ -19,44 +23,5 @@ public class HistoryMove {
         this.oldCell = oldCell;
         this.newCell = newCell;
         this.pieceDestroyed = pieceDestroyed;
-    }
-
-    public Cell getNewCell() {
-        return newCell;
-    }
-
-    public Cell getOldCell() {
-        return oldCell;
-    }
-
-    public Piece getPiece() {
-        return piece;
-    }
-
-    public Piece getPieceDestroyed() {
-        return pieceDestroyed;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        HistoryMove that = (HistoryMove) o;
-        return Objects.equals(piece, that.piece) && Objects.equals(oldCell, that.oldCell) &&
-                Objects.equals(newCell, that.newCell) && Objects.equals(pieceDestroyed, that.pieceDestroyed);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(piece, oldCell, newCell, pieceDestroyed);
-    }
-
-    @Override
-    public String toString() {
-        return "HistoryMove{" +
-                "newCell=" + newCell +
-                ", piece=" + piece +
-                ", oldCell=" + oldCell +
-                ", pieceDestroyed=" + pieceDestroyed +
-                '}';
     }
 }

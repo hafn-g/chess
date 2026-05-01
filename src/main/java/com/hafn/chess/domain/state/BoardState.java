@@ -5,6 +5,10 @@ import com.hafn.chess.domain.model.HistoryMove;
 import com.hafn.chess.domain.model.PieceColor;
 import com.hafn.chess.domain.piece.Piece;
 import com.hafn.chess.domain.port.BoardPort;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,24 +20,35 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Slf4j
+@EqualsAndHashCode
 public class BoardState implements BoardPort {
 
     private final Map<Cell, Piece> pieceMap;
     private final Cell[][] cells;
-    private final List<HistoryMove> historyMoves;
-    private Cell clickedCell;
     private final LocalDateTime startGame;
     private final AtomicInteger whiteTime;
     private final AtomicInteger blackTime;
 
+    @Setter
+    @Getter
+    private Cell clickedCell;
+    @Setter
+    @Getter
     private boolean isWhiteShah = false;
+    @Setter
+    @Getter
     private boolean isBlackShah = false;
 
+    @Getter
+    private final List<HistoryMove> historyMoves;
+    @Getter
     private PieceColor queue;
-
+    @Getter
     private final int rows;
+    @Getter
     private final int cols;
-
+    @Getter
     private boolean pauseGame = false;
 
     private ScheduledExecutorService scheduler;
@@ -56,7 +71,12 @@ public class BoardState implements BoardPort {
     private void startTimer() {
         scheduler = Executors.newSingleThreadScheduledExecutor();
 
-        System.out.println("Timer started");
+        log.info(
+                "Timer was started (Start time {}, Black time {}s, White time {}s)",
+                startGame,
+                blackTime,
+                whiteTime
+        );
         Runnable task = () -> {
             if (queue.equals(PieceColor.BLACK)) {
                 blackTime.decrementAndGet();
@@ -65,7 +85,12 @@ public class BoardState implements BoardPort {
             }
 
             if (whiteTime.get() <= 0 || blackTime.get() <= 0) {
-                System.out.println("Time is up");
+                log.info(
+                        "Timer stopped due to one of the players running out of time (Start time {}, Black time {}s, White time {}s)",
+                        startGame,
+                        blackTime,
+                        whiteTime
+                );
                 stopGame();
             }
         };
@@ -76,6 +101,8 @@ public class BoardState implements BoardPort {
     public void stopGame() {
         scheduler.shutdown();
         pauseGame = true;
+
+        log.info("Game finished");
     }
 
     public Piece getPiece(Cell cell) {
@@ -98,14 +125,6 @@ public class BoardState implements BoardPort {
         pieceMap.remove(cell);
     }
 
-    public int getRows() {
-        return this.rows;
-    }
-
-    public int getCols() {
-        return this.cols;
-    }
-
     public Cell getCell(int row, int col) {
         return cells[row][col];
     }
@@ -118,44 +137,12 @@ public class BoardState implements BoardPort {
         this.historyMoves.add(historyMove);
     }
 
-    public List<HistoryMove> getHistoryMoves() {
-        return historyMoves;
-    }
-
-    public Cell getClickedCell() {
-        return clickedCell;
-    }
-
-    public void setClickedCell(Cell clickedCell) {
-        this.clickedCell = clickedCell;
-    }
-
-    public boolean isBlackShah() {
-        return isBlackShah;
-    }
-
-    public void setBlackShah(boolean blackShah) {
-        isBlackShah = blackShah;
-    }
-
-    public boolean isWhiteShah() {
-        return isWhiteShah;
-    }
-
     public boolean isShah(PieceColor color) {
         if (color.equals(PieceColor.BLACK)) {
             return isBlackShah;
         } else {
             return isWhiteShah;
         }
-    }
-
-    public void setWhiteShah(boolean whiteShah) {
-        isWhiteShah = whiteShah;
-    }
-
-    public PieceColor getQueue() {
-        return queue;
     }
 
     public void nextQueue() {
@@ -182,14 +169,27 @@ public class BoardState implements BoardPort {
         }
     }
 
-    public boolean isPauseGame() {
-        return pauseGame;
-    }
-
     /**
      *  Single gate on the borders
      */
     public boolean inBounds(int r, int c) {
         return r >= 0 && r < rows && c >= 0 && c < cols;
+    }
+
+    @Override
+    public String toString() {
+        return "BoardState{" +
+                "blackTime=" + blackTime +
+                ", clickedCell=" + clickedCell +
+                ", cols=" + cols +
+                ", isBlackShah=" + isBlackShah +
+                ", isWhiteShah=" + isWhiteShah +
+                ", pauseGame=" + pauseGame +
+                ", pieceMap=" + pieceMap +
+                ", queue=" + queue +
+                ", rows=" + rows +
+                ", startGame=" + startGame +
+                ", whiteTime=" + whiteTime +
+                '}';
     }
 }

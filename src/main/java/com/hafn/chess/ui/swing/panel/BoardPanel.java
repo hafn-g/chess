@@ -11,6 +11,8 @@ import com.hafn.chess.domain.state.BoardState;
 import com.hafn.chess.ui.swing.model.BoardMetrics;
 import com.hafn.chess.ui.swing.renderer.BoardRenderer;
 import com.hafn.chess.ui.swing.renderer.ImageCache;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,15 +21,18 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.function.Consumer;
 
+@Slf4j
 public class BoardPanel extends JPanel implements BoardStatePort, BoardRenderPort {
     private static final int MIN_SIDE = 400;
     private static final int PREF_SIDE = 600;
 
+    @Getter
     private final BoardState state;
+    @Getter
+    private final BoardMetrics metrics;
+
     private final BoardInputPort boardController;
     private final BoardRenderer renderer;
-
-    private final BoardMetrics metrics;
 
     public BoardPanel() {
         setOpaque(false); // transparent background
@@ -35,11 +40,15 @@ public class BoardPanel extends JPanel implements BoardStatePort, BoardRenderPor
         metrics = new BoardMetrics();
 
         state = BoardInitializer.createDefaultState(PieceColor.BLACK);
+        log.debug("Board state was initialized by the default method: {}", state);
         renderer = new BoardRenderer(this);
+        log.debug("Board render was initialized: {}", renderer);
 
         boardController = new BoardController(this, renderer);
+        log.debug("Board controller was initialized: {}", boardController);
 
         addListener();
+        log.debug("Board event listeners have been attached");
     }
 
     private void addListener() {
@@ -111,14 +120,6 @@ public class BoardPanel extends JPanel implements BoardStatePort, BoardRenderPor
         repaint();
     }
 
-    public BoardState getState() {
-        return this.state;
-    }
-
-    public BoardMetrics getMetrics() {
-        return metrics;
-    }
-
     public void repaintBoard() {
         repaint();
     }
@@ -126,7 +127,7 @@ public class BoardPanel extends JPanel implements BoardStatePort, BoardRenderPor
     /**
      * Shows the dialog for selecting pieces to promote a pawn to
      */
-    public void showPromotionDialog(PieceColor color, Consumer<PieceType> onPromotionSelected) {
+    public boolean showPromotionDialog(PieceColor color, Consumer<PieceType> onPromotionSelected) {
         // Transformation options
         PieceType[] types = {
                 PieceType.QUEEN,
@@ -161,10 +162,12 @@ public class BoardPanel extends JPanel implements BoardStatePort, BoardRenderPor
             for (int i = 0; i < types.length; i++) {
                 if (buttons[i].isSelected()) {
                     onPromotionSelected.accept(types[i]);
-                    return;
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     /**

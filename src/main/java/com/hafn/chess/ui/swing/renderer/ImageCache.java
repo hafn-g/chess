@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class ImageCache {
+public abstract class ImageCache {
 
     private static final Map<String, Image> images = new HashMap<>();
 

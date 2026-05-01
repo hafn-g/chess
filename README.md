@@ -1,7 +1,7 @@
 # Chess Blitz Game
 
 [![Latest Release](https://img.shields.io/github/v/release/hafn-g/chess)](https://github.com/hafn-g/chess/releases)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/hafn-g/chess/rebase.yml)](https://github.com/hafn-g/chess/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/hafn-g/chess/release.yml)](https://github.com/hafn-g/chess/actions)
 [![License: MIT](https://img.shields.io/github/license/hafn-g/chess)](https://opensource.org/licenses/MIT)
 ![Java Version](https://img.shields.io/badge/Java-25-blue)
 

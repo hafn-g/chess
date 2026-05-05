@@ -28,6 +28,8 @@ public interface BoardPort {
 
     void addHistoryMoves(HistoryMove historyMove);
 
+    void removeHistoryMove(HistoryMove historyMove);
+
     List<HistoryMove> getHistoryMoves();
 
     Cell getClickedCell();

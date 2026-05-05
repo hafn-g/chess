@@ -30,8 +30,9 @@ public class BoardPanel extends JPanel implements BoardStatePort, BoardRenderPor
     private final BoardState state;
     @Getter
     private final BoardMetrics metrics;
-
+    @Getter
     private final BoardInputPort boardController;
+    @Getter
     private final BoardRenderer renderer;
 
     public BoardPanel(int rows, int cols, int playerTime, PieceColor queue) {
@@ -75,7 +76,7 @@ public class BoardPanel extends JPanel implements BoardStatePort, BoardRenderPor
             }
 
             @Override
-            public void mousePressed(java.awt.event.MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 handleClick(e.getX(), e.getY());
             }
         });

@@ -2,9 +2,9 @@ package com.hafn.chess.bootstrap;
 
 import com.hafn.chess.domain.model.PieceColor;
 import com.hafn.chess.domain.piece.*;
+import com.hafn.chess.domain.port.BoardPort;
+import com.hafn.chess.domain.service.CheckRule;
 import com.hafn.chess.domain.state.BoardState;
-
-import static com.hafn.chess.domain.service.CheckRule.checkAllPiece;
 
 public abstract class BoardInitializer {
 
@@ -12,11 +12,11 @@ public abstract class BoardInitializer {
         BoardState state = new BoardState(rows, cols, playerTime, queue);
         initCells(state);
         initPieces(state);
-        checkAllPiece(state);
+        CheckRule.detectChecks(state);
         return state;
     }
 
-    public static void initCells(BoardState state) {
+    public static void initCells(BoardPort state) {
         for (int r = 0; r < state.getRows(); r++) {
             for (int c = 0; c < state.getCols(); c++) {
                 String cellName = "" + (char) ('a' + c) + (state.getRows() - r);
@@ -25,7 +25,7 @@ public abstract class BoardInitializer {
         }
     }
 
-    public static void initPieces(BoardState state) {
+    public static void initPieces(BoardPort state) {
         // pawns
         for (int c = 0; c < state.getCols(); c++) {
             state.addPiece(new Pawn(PieceColor.BLACK, state.getCell(1, c)));

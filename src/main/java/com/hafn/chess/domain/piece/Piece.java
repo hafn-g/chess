@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -35,6 +36,8 @@ public abstract class Piece implements Move {
         Cell oldCel = state.getClickedCell();
         Piece clickedCellPiece = state.getPiece(clicked);
 
+        if (oldCel == null) throw new NullPointerException("The variable oldCel is null");
+
         if (clickedCellPiece != null) {
             if (clickedCellPiece.getType().equals(PieceType.KING)) {
                 return;
@@ -55,8 +58,11 @@ public abstract class Piece implements Move {
 
     @Override
     public void undo(BoardPort state) {
-        HistoryMove lastMove = state.getHistoryMoves().getLast();
-        if (lastMove == null) return;
+        List<HistoryMove> historyMove = state.getHistoryMoves();
+        if (historyMove.isEmpty()) {
+            return;
+        }
+        HistoryMove lastMove = historyMove.getLast();
 
         Cell from = lastMove.getOldCell();
         Cell to = lastMove.getNewCell();
@@ -69,6 +75,8 @@ public abstract class Piece implements Move {
         if (capturedPiece != null) {
             state.addPiece(capturedPiece);
         }
+
+        state.removeHistoryMove(lastMove);
 
         state.setClickedCell(null);
     }

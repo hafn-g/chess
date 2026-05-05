@@ -4,17 +4,17 @@ import com.hafn.chess.domain.model.Cell;
 import com.hafn.chess.domain.model.PieceColor;
 import com.hafn.chess.domain.model.PieceType;
 import com.hafn.chess.domain.piece.Piece;
-import com.hafn.chess.domain.state.BoardState;
+import com.hafn.chess.domain.port.BoardPort;
 
 import java.util.Map;
 
 public abstract class CheckRule {
 
-    public static void checkAllPiece(BoardState state) {
-        checkAllPiece(state, state.getPieces());
+    public static void detectChecks(BoardPort state) {
+        detectChecks(state, state.getPieces());
     }
 
-    public static void checkAllPiece(BoardState state, Map<Cell, Piece> pieceMap) {
+    public static void detectChecks(BoardPort state, Map<Cell, Piece> pieceMap) {
         var ref = new Object() {
             Cell blackKing = null;
             Cell whiteKing = null;

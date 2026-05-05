@@ -6,12 +6,11 @@ import com.hafn.chess.application.port.out.SelectionPort;
 import com.hafn.chess.domain.model.Cell;
 import com.hafn.chess.domain.model.PieceColor;
 import com.hafn.chess.domain.piece.*;
+import com.hafn.chess.domain.service.CheckRule;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-
-import static com.hafn.chess.domain.service.CheckRule.checkAllPiece;
 
 @Slf4j
 @EqualsAndHashCode
@@ -62,12 +61,12 @@ public class BoardController implements BoardInputPort {
         if (boardStatePort.getState().isWhiteShah() || boardStatePort.getState().isBlackShah()) {
             // King is in check – try to move out of check
             piece.execute(boardStatePort.getState(), clicked);
-            checkAllPiece(boardStatePort.getState());
+            CheckRule.detectChecks(boardStatePort.getState());
 
             if (boardStatePort.getState().isWhiteShah() || boardStatePort.getState().isBlackShah()) {
                 // After the move, the king is still in check – illegal move
                 piece.undo(boardStatePort.getState());
-                checkAllPiece(boardStatePort.getState());
+                CheckRule.detectChecks(boardStatePort.getState());
                 log.warn("Move failed: King would still be in check.");
                 boardStatePort.showInfoDialog("Move failed", "King would still be in check");
             } else {
@@ -84,12 +83,12 @@ public class BoardController implements BoardInputPort {
         } else {
             // No check – normal move
             piece.execute(boardStatePort.getState(), clicked);
-            checkAllPiece(boardStatePort.getState());
+            CheckRule.detectChecks(boardStatePort.getState());
 
             if (boardStatePort.getState().isShah(piece.getColor())) {
                 // The move puts the moving player's own king in check – illegal
                 piece.undo(boardStatePort.getState());
-                checkAllPiece(boardStatePort.getState());
+                CheckRule.detectChecks(boardStatePort.getState());
                 log.warn("Move failed: Would put own king in check.");
                 boardStatePort.showInfoDialog("Move failed", "Would put own king in check");
             } else {
@@ -125,7 +124,7 @@ public class BoardController implements BoardInputPort {
                     }
                     if (promoted != null) {
                         boardStatePort.getState().addPiece(promoted);
-                        checkAllPiece(boardStatePort.getState());
+                        CheckRule.detectChecks(boardStatePort.getState());
                         log.info("Pawn of color {} ({}) promoted to piece {}", color, cell, promoted.getType());
                     }
                 });

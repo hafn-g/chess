@@ -147,6 +147,10 @@ public class BoardState implements BoardPort {
         this.historyMoves.add(historyMove);
     }
 
+    public void removeHistoryMove(HistoryMove historyMove) {
+        this.historyMoves.remove(historyMove);
+    }
+
     public boolean isShah(PieceColor color) {
         if (color.equals(PieceColor.BLACK)) {
             return isBlackShah;

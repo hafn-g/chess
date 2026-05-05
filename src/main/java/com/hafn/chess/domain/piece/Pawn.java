@@ -4,11 +4,13 @@ import com.hafn.chess.domain.model.Cell;
 import com.hafn.chess.domain.model.PieceColor;
 import com.hafn.chess.domain.model.PieceType;
 import com.hafn.chess.domain.port.BoardPort;
+import lombok.Getter;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class Pawn extends Piece {
+    @Getter
     private boolean isMoved = false;
     private boolean movedInLast = false;
 

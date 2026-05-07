@@ -27,6 +27,9 @@ public abstract class ImageCache {
         load("black_queen", "/assets/pieces/black/queen.png");
         load("white_king", "/assets/pieces/white/king.png");
         load("black_king", "/assets/pieces/black/king.png");
+
+        load("white_checker", "/assets/pieces/white/checker.png");
+        load("black_checker", "/assets/pieces/black/checker.png");
     }
 
     private static void load(String key, String path) {

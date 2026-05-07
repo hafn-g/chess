@@ -22,6 +22,17 @@ A **chess game** played as **blitz rounds**, written entirely in **Java Swing** 
 - Any move that would put your own king in **check** is canceled
 - **Statistics panel** shows: whose turn, each player's remaining time, and total game time
 
+## Quality & CI
+- 60+ unit tests covering:
+- - move validation
+- - check/checkmate logic
+- - piece behavior
+- Built with JUnit and Mockito
+- Integrated CI pipeline (GitHub Actions):
+- - runs on every push to main
+- - executes full test suite
+- - prevents broken builds
+
 ## License
 Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more information.
 
@@ -34,7 +45,7 @@ Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more informati
 1. Download the latest `.jar` from the [Releases page](../../releases).
 2. Run it via terminal:
    ```bash
-   java -jar hafn-chess-1.0.0.jar
+   java -jar hafn-chess-VERSION.jar
    ```
    *Or simply double-click the file if your OS associations are set up.*
 

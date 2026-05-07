@@ -5,6 +5,7 @@ import com.hafn.chess.domain.model.PieceColor;
 import com.hafn.chess.domain.model.PieceType;
 import com.hafn.chess.domain.piece.Piece;
 import com.hafn.chess.domain.port.BoardPort;
+import com.hafn.chess.domain.state.BoardState;
 
 import java.util.Map;
 
@@ -46,5 +47,11 @@ public abstract class CheckRule {
 
         state.setBlackShah(ref.blackShah);
         state.setWhiteShah(ref.whiteShah);
+    }
+
+    public static void generateAllPossibleMoves(BoardState state) {
+        state.getPieces().forEach((_, piece) -> {
+            piece.getNewPossibleMoves(state);
+        });
     }
 }

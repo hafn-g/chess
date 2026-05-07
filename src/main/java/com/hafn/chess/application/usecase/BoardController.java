@@ -4,6 +4,8 @@ import com.hafn.chess.application.port.in.BoardInputPort;
 import com.hafn.chess.application.port.out.BoardStatePort;
 import com.hafn.chess.application.port.out.SelectionPort;
 import com.hafn.chess.domain.model.Cell;
+import com.hafn.chess.domain.model.GameType;
+import com.hafn.chess.domain.model.HistoryMove;
 import com.hafn.chess.domain.model.PieceColor;
 import com.hafn.chess.domain.piece.*;
 import com.hafn.chess.domain.service.CheckRule;
@@ -11,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Set;
 
 @Slf4j
 @EqualsAndHashCode
@@ -40,8 +44,12 @@ public class BoardController implements BoardInputPort {
             isMove = piece.getPossibleMoves().contains(clicked);
         }
         if (isMove) {
-            toMove(piece, clicked);
-            clearSelection();
+            if (boardStatePort.getGameConfig().getGameType().equals(GameType.CHESS)) {
+                toMoveChess(piece, clicked);
+                clearSelection();
+            } else {
+                toMoveCheckers((Checker) piece, clicked);
+            }
         } else {
             toSelected(clicked);
         }
@@ -53,7 +61,40 @@ public class BoardController implements BoardInputPort {
         boardStatePort.getState().setClickedCell(null);
     }
 
-    private void toMove(Piece piece, Cell clicked) {
+    private void toMoveCheckers(Checker piece, Cell clicked) {
+        Cell fromCell = piece.getCell();
+        log.trace("Attempt to move checker {} to {}", piece, clicked);
+
+        if (boardStatePort.getState().getPiece(clicked) != null) return;
+
+        piece.execute(boardStatePort.getState(), clicked);
+        HistoryMove lastHistoryMove = boardStatePort.getState().getHistoryMoves().getLast();
+
+        if (lastHistoryMove.getPieceDestroyed() != null) {
+            if (piece.isMoveIsAvailableAfterWalking(boardStatePort.getState())) {
+                boardStatePort.getState().setClickedCell(piece.getCell());
+                selectionPort.setSelectedCell(piece.getCell());
+                log.info("Move successful from the queue: {} -> {}", fromCell.getName(), clicked.getName());
+
+                boardStatePort.getState().getPieces().forEach((_, statePiece) -> {
+                    if (!statePiece.equals(piece)) {
+                        statePiece.setPossibleMoves(Set.of());
+                    }
+                });
+
+                return;
+            }
+        }
+
+        boardStatePort.getState().nextQueue();
+        boardStatePort.getState().addTime(piece.getColor());
+        CheckRule.generateAllPossibleMoves(boardStatePort.getState());
+        clearSelection();
+
+        log.info("Last move successful: {} -> {}", fromCell.getName(), clicked.getName());
+    }
+
+    private void toMoveChess(Piece piece, Cell clicked) {
         Cell fromCell = piece.getCell();
         Piece clickedPiece = boardStatePort.getState().getPiece(clicked);
         log.trace("Attempt to move piece {} to {}", piece, clicked);

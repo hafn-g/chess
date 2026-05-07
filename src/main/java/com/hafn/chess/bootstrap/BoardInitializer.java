@@ -1,5 +1,7 @@
 package com.hafn.chess.bootstrap;
 
+import com.hafn.chess.domain.model.GameConfig;
+import com.hafn.chess.domain.model.GameType;
 import com.hafn.chess.domain.model.PieceColor;
 import com.hafn.chess.domain.piece.*;
 import com.hafn.chess.domain.port.BoardPort;
@@ -8,10 +10,14 @@ import com.hafn.chess.domain.state.BoardState;
 
 public abstract class BoardInitializer {
 
-    public static BoardState createDefaultState(int rows, int cols, int playerTime, PieceColor queue) {
-        BoardState state = new BoardState(rows, cols, playerTime, queue);
+    public static BoardState createDefaultState(GameConfig config) {
+        BoardState state = new BoardState(config.getRows(), config.getCols(), config.getPlayerTime(), config.getQueue());
         initCells(state);
-        initPieces(state);
+        if (config.getGameType().equals(GameType.CHESS)) {
+            initChessPieces(state);
+        } else if (config.getGameType().equals(GameType.CHECKERS)) {
+            initCheckerPieces(state);
+        }
         CheckRule.detectChecks(state);
         return state;
     }
@@ -25,7 +31,21 @@ public abstract class BoardInitializer {
         }
     }
 
-    public static void initPieces(BoardPort state) {
+    public static void initCheckerPieces(BoardPort state) {
+        for (int i = 0; i < 3; i++) {
+            for (int c = 0; c < state.getCols(); c++) {
+                if (!state.getCell(i, c).isLight()) {
+                    state.addPiece(new Checker(PieceColor.BLACK, state.getCell(i, c)));
+                }
+
+                if (!state.getCell(state.getRows() - 1 - i, c).isLight()) {
+                    state.addPiece(new Checker(PieceColor.WHITE, state.getCell(state.getRows() - 1 - i, c)));
+                }
+            }
+        }
+    }
+
+    public static void initChessPieces(BoardPort state) {
         // pawns
         for (int c = 0; c < state.getCols(); c++) {
             state.addPiece(new Pawn(PieceColor.BLACK, state.getCell(1, c)));

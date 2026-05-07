@@ -1,8 +1,6 @@
 package com.hafn.chess.application.usecase;
 
-import com.hafn.chess.domain.model.Cell;
-import com.hafn.chess.domain.model.PieceColor;
-import com.hafn.chess.domain.model.PieceType;
+import com.hafn.chess.domain.model.*;
 import com.hafn.chess.domain.piece.Pawn;
 import com.hafn.chess.domain.piece.Piece;
 import com.hafn.chess.domain.piece.Queen;
@@ -22,7 +20,8 @@ public class BoardControllerTest {
 
     @BeforeEach
     void setUp() {
-        boardPanel = new BoardPanel(8, 8, 600, PieceColor.WHITE);
+        GameConfig gameConfig = new GameConfig(GameType.CHESS, 8, 8, 600, PieceColor.WHITE);
+        boardPanel = new BoardPanel(gameConfig);
     }
 
     @Test

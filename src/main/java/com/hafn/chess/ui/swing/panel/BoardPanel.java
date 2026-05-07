@@ -5,6 +5,7 @@ import com.hafn.chess.application.port.out.BoardRenderPort;
 import com.hafn.chess.application.port.out.BoardStatePort;
 import com.hafn.chess.application.usecase.BoardController;
 import com.hafn.chess.bootstrap.BoardInitializer;
+import com.hafn.chess.domain.model.GameConfig;
 import com.hafn.chess.domain.model.PieceColor;
 import com.hafn.chess.domain.model.PieceType;
 import com.hafn.chess.domain.state.BoardState;
@@ -34,22 +35,21 @@ public class BoardPanel extends JPanel implements BoardStatePort, BoardRenderPor
     private final BoardInputPort boardController;
     @Getter
     private final BoardRenderer renderer;
+    @Getter
+    private final GameConfig gameConfig;
 
-    public BoardPanel(int rows, int cols, int playerTime, PieceColor queue) {
+    public BoardPanel(GameConfig config) {
         setOpaque(false); // transparent background
-
-        if (rows < 8 || cols < 8) {
-            throw new IllegalArgumentException("The minimum is 8 columns and rows");
-        }
+        this.gameConfig = config;
 
         log.info(
                 "Configuration set: {} rows, {} columns, {}s time per player, {} moves first",
-                rows, cols, playerTime, queue
+                config.getRows(), config.getCols(), config.getPlayerTime(), config.getQueue()
         );
 
-        metrics = new BoardMetrics(rows, cols);
+        metrics = new BoardMetrics(config.getRows(), config.getCols());
 
-        state = BoardInitializer.createDefaultState(rows, cols, playerTime, queue);
+        state = BoardInitializer.createDefaultState(config);
         log.debug("Board state was initialized by the default method: {}", state);
         renderer = new BoardRenderer(this);
         log.debug("Board render was initialized: {}", renderer);

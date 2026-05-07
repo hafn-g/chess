@@ -26,7 +26,7 @@ public class Knight extends Piece {
             if (!state.inBounds(r, c)) continue;
             Cell target = state.getCell(r, c);
             Piece targetPiece = state.getPiece(target);
-            if (targetPiece == null || targetPiece.getColor() != getColor()) {
+            if (targetPiece == null || targetPiece.getColor() != this.getColor()) {
                 moves.add(target);
             }
         }

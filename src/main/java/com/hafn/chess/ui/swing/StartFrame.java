@@ -1,5 +1,7 @@
 package com.hafn.chess.ui.swing;
 
+import com.hafn.chess.domain.model.GameConfig;
+import com.hafn.chess.domain.model.GameType;
 import com.hafn.chess.domain.model.PieceColor;
 
 import javax.swing.*;
@@ -20,6 +22,14 @@ public class StartFrame extends JFrame {
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
+
+        // Game type selection
+        JPanel gameTypePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel gameTypeLabel = new JLabel("Game type:");
+        JComboBox<GameType> gameTypeCombo = new JComboBox<>(GameType.values());
+        gameTypePanel.add(gameTypeLabel);
+        gameTypePanel.add(gameTypeCombo);
+        centerPanel.add(gameTypePanel);
 
         JPanel rowsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel rowsLabel = new JLabel("Rows (1-8, ⇅):");
@@ -58,7 +68,9 @@ public class StartFrame extends JFrame {
             int time = (int) timeSpinner.getValue();
             String firstMove = (String) firstMoveCombo.getSelectedItem();
             PieceColor queue = "BLACK".equalsIgnoreCase(firstMove) ? PieceColor.BLACK : PieceColor.WHITE;
-            ChessFrame frame = new ChessFrame(rows, cols, time, queue);
+            GameType gameType = (GameType) gameTypeCombo.getSelectedItem();
+            GameConfig config = new GameConfig(gameType, rows, cols, time, queue);
+            ChessFrame frame = new ChessFrame(config);
             frame.setVisible(true);
             dispose();
         });

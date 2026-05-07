@@ -21,6 +21,11 @@ jobs:
           distribution: 'oracle'
           cache: 'maven'
 
+      - name: Set project version from tag
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          mvn versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false
+
       - name: Build with Maven
         run: mvn clean package
 

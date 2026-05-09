@@ -44,6 +44,7 @@ public class BoardState implements BoardPort {
     @Getter
     private final List<HistoryMove> historyMoves;
     @Getter
+    @Setter
     private PieceColor queue;
     @Getter
     private final int rows;
@@ -139,6 +140,18 @@ public class BoardState implements BoardPort {
         return cells[row][col];
     }
 
+    public Cell getCell(String name) throws IllegalArgumentException {
+        for (Cell[] cells1 : cells) {
+            for (Cell cells2 : cells1) {
+                if (cells2.getName().equalsIgnoreCase(name.trim())) {
+                    return cells2;
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("Figure by name not found");
+    }
+
     public void addCell(int row, int col, String name) {
         cells[row][col] = new Cell(row, col, name);
     }
@@ -185,6 +198,18 @@ public class BoardState implements BoardPort {
         } else {
             whiteTime.addAndGet(10);
         }
+    }
+
+    public void setWhiteTime(int whiteTime) {
+        this.whiteTime.set(whiteTime);
+    }
+
+    public void setBlackTime(int blackTime) {
+        this.blackTime.set(blackTime);
+    }
+
+    public void setGameTime(int gameTime) {
+        this.gameTime.set(gameTime);
     }
 
     /**

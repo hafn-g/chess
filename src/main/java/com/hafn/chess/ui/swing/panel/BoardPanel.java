@@ -4,6 +4,7 @@ import com.hafn.chess.application.port.in.BoardInputPort;
 import com.hafn.chess.application.port.out.BoardRenderPort;
 import com.hafn.chess.application.port.out.BoardStatePort;
 import com.hafn.chess.application.usecase.BoardController;
+import com.hafn.chess.application.usecase.BoardNetworkClientController;
 import com.hafn.chess.bootstrap.BoardInitializer;
 import com.hafn.chess.domain.model.GameConfig;
 import com.hafn.chess.domain.model.PieceColor;
@@ -37,6 +38,29 @@ public class BoardPanel extends JPanel implements BoardStatePort, BoardRenderPor
     private final BoardRenderer renderer;
     @Getter
     private final GameConfig gameConfig;
+
+    public BoardPanel(GameConfig config, PieceColor myMultiplayerColor) {
+        setOpaque(false); // transparent background
+        this.gameConfig = config;
+
+        log.info(
+                "Configuration set multiplay: {} rows, {} columns, {}s time per player, {} moves first",
+                config.getRows(), config.getCols(), config.getPlayerTime(), config.getQueue()
+        );
+
+        metrics = new BoardMetrics(config.getRows(), config.getCols());
+
+        state = BoardInitializer.createDefaultState(config);
+        log.debug("Board state was initialized by the default method: {}", state);
+        renderer = new BoardRenderer(this);
+        log.debug("Board render was initialized: {}", renderer);
+
+        boardController = new BoardNetworkClientController(this, renderer, myMultiplayerColor);
+        log.debug("Board controller was initialized: {}", boardController);
+
+        addListener();
+        log.debug("Board event listeners have been attached");
+    }
 
     public BoardPanel(GameConfig config) {
         setOpaque(false); // transparent background

@@ -24,6 +24,8 @@ public interface BoardPort {
 
     Cell getCell(int row, int col);
 
+    Cell getCell(String name) throws IllegalArgumentException;
+
     void addCell(int row, int col, String name);
 
     void addHistoryMoves(HistoryMove historyMove);
@@ -50,6 +52,8 @@ public interface BoardPort {
 
     PieceColor getQueue();
 
+    void setQueue(PieceColor color);
+
     void nextQueue();
 
     LocalDateTime getStartGameDateTime();
@@ -57,6 +61,14 @@ public interface BoardPort {
     int getBlackTime();
 
     int getWhiteTime();
+
+    int getGameTime();
+
+    void setWhiteTime(int whiteTime);
+
+    void setBlackTime(int blackTime);
+
+    void setGameTime(int gameTime);
 
     void addTime(PieceColor color);
 

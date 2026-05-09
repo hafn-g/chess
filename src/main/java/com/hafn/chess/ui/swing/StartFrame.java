@@ -77,6 +77,15 @@ public class StartFrame extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
         buttonPanel.add(playButton);
+        // Добавляем кнопку Online
+        JButton onlineButton = new JButton("Online");
+        onlineButton.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
+        onlineButton.addActionListener(_ -> {
+            OnlineModeFrame onlineFrame = new OnlineModeFrame();
+            onlineFrame.setVisible(true);
+            dispose();
+        });
+        buttonPanel.add(onlineButton);
         centerPanel.add(buttonPanel);
 
         panel.add(centerPanel, BorderLayout.CENTER);

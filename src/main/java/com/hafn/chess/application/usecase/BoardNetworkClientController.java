@@ -7,10 +7,13 @@ import com.hafn.chess.domain.model.Cell;
 import com.hafn.chess.domain.model.GameType;
 import com.hafn.chess.domain.model.HistoryMove;
 import com.hafn.chess.domain.model.PieceColor;
-import com.hafn.chess.domain.piece.*;
+import com.hafn.chess.domain.piece.Checker;
+import com.hafn.chess.domain.piece.Pawn;
+import com.hafn.chess.domain.piece.Piece;
+import com.hafn.chess.domain.piece.Queen;
 import com.hafn.chess.domain.service.CheckRule;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,10 +22,27 @@ import java.util.Set;
 @Slf4j
 @EqualsAndHashCode
 @ToString
-@AllArgsConstructor
-public class BoardController implements BoardInputPort {
+public class BoardNetworkClientController implements BoardInputPort {
     private final BoardStatePort boardStatePort;
     private final SelectionPort selectionPort;
+
+    @Getter
+    private final PieceColor myMultiplayerColor;
+
+    public BoardNetworkClientController(BoardStatePort boardStatePort, SelectionPort selectionPort, PieceColor myMultiplayerColor) {
+        this.boardStatePort = boardStatePort;
+        this.selectionPort = selectionPort;
+        this.myMultiplayerColor = myMultiplayerColor;
+    }
+
+    @Override
+    public void move(Cell from, Cell to) {
+        boardStatePort.getState().setClickedCell(from);
+        Piece piece = boardStatePort.getState().getPiece(from);
+        piece.execute(boardStatePort.getState(), to);
+        handlePromotionIfNeeded(piece, to);
+        CheckRule.detectChecks(boardStatePort.getState());
+    }
 
     /**
      *  Works only with cells
@@ -30,6 +50,10 @@ public class BoardController implements BoardInputPort {
     @Override
     public void handleClick(int row, int col) {
         if (boardStatePort.getState().isPauseGame()) {
+            clearSelection();
+            return;
+        }
+        if (!boardStatePort.getState().getQueue().equals(myMultiplayerColor)) {
             clearSelection();
             return;
         }
@@ -56,17 +80,6 @@ public class BoardController implements BoardInputPort {
     }
 
     @Override
-    public void move(Cell from, Cell to) {
-//        For multiplayer games
-    }
-
-    @Override
-    public PieceColor getMyMultiplayerColor() {
-//        For multiplayer games
-        return PieceColor.WHITE;
-    }
-
-    @Override
     public void clearSelection() {
         selectionPort.clearSelectedCell();
         boardStatePort.getState().setClickedCell(null);
@@ -83,7 +96,6 @@ public class BoardController implements BoardInputPort {
 
         if (lastHistoryMove.getPieceDestroyed() != null) {
             if (piece.isMoveIsAvailableAfterWalking(boardStatePort.getState())) {
-                boardStatePort.getState().setClickedCell(piece.getCell());
                 selectionPort.setSelectedCell(piece.getCell());
                 log.info("Move successful from the queue: {} -> {}", fromCell.getName(), clicked.getName());
 
@@ -161,29 +173,14 @@ public class BoardController implements BoardInputPort {
     private void handlePromotionIfNeeded(Piece piece, Cell cell) {
         if (piece instanceof Pawn) {
             int lastRow = (piece.getColor() == PieceColor.WHITE) ? 0 : boardStatePort.getState().getRows() - 1;
-            if (cell.getRow() == lastRow && boardStatePort != null) {
+            if (cell.getRow() == lastRow && boardStatePort.getState() != null) {
                 PieceColor color = piece.getColor();
-                boolean toPromote = boardStatePort.showPromotionDialog(color, type -> {
-                    // Removing a pawn
-                    boardStatePort.getState().removePiece(cell);
-                    // Adding a new figure
-                    Piece promoted = null;
-                    switch (type) {
-                        case QUEEN -> promoted = new Queen(color, cell);
-                        case ROOK -> promoted = new Rook(color, cell);
-                        case BISHOP -> promoted = new Bishop(color, cell);
-                        case KNIGHT -> promoted = new Knight(color, cell);
-                    }
-                    if (promoted != null) {
-                        boardStatePort.getState().addPiece(promoted);
-                        CheckRule.detectChecks(boardStatePort.getState());
-                        log.info("Pawn of color {} ({}) promoted to piece {}", color, cell, promoted.getType());
-                    }
-                });
+                Piece promoted = new Queen(color, cell);
 
-                if (!toPromote) {
-                    log.info("Pawn of color {} ({}) did not promote to any piece upon reaching the end of the board", color, cell);
-                }
+                boardStatePort.getState().removePiece(cell);
+                boardStatePort.getState().addPiece(promoted);
+                CheckRule.detectChecks(boardStatePort.getState());
+                log.info("Pawn of color {} ({}) promoted to piece {}", color, cell, promoted.getType());
             }
         }
     }
